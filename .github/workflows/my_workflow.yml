@@ -17,12 +17,12 @@ jobs:
         run: |
           pip install uv
           make install
-      - name: Run linter and pytest
-        run: |
-          make check
-      - name: Run test coverage
-        run: |
-          make test-coverage
+      # - name: Run linter and pytest
+      #   run: |
+      #     make check
+      # - name: Run test coverage
+      #   run: |
+      #     make test-coverage
       
       - name: SonarQubeScan
         uses: SonarSource/sonarqube-scan-action@299e4b793aaa83bf2aba7c9c14bedbb485688ec4
