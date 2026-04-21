@@ -46,7 +46,7 @@ def urls_index():
         flash("Указанный URL уже существует", "warning")
         return redirect(url_for("get_url", id=url_info["id"]))
     
-    id = repo.add(normalized_url)
+    id = repo.add_url(normalized_url)
     flash("Страница успешно добавлена", "success")
     return redirect(url_for("get_url", id=id))
 
@@ -57,12 +57,22 @@ def get_url(id):
     if not url_info:
         abort(404)
 
-    return render_template("url.html", url_info=url_info)
+    checks_data = repo.get_url_checks(id)
+    return render_template("url.html", url_info=url_info, checks_data=checks_data)
 
 @app.route("/urls", methods=["GET"])
 def get_urls():
-    urls_content = repo.get_content()
+    urls_content = repo.get_urls_last_checks()
     return render_template("urls.html", urls_content=urls_content)
+
+@app.route("/urls/<int:id>/checks", methods=["POST"])
+def add_url_check(id):
+    url_info = repo.find_id(id)
+    repo.add_url_check(id)
+    flash("Страница успешно проверена", "success")
+    checks_data = repo.get_url_checks(id)
+    return render_template("url.html", url_info=url_info, checks_data=checks_data)
+    
 
 @app.errorhandler(404)
 def page_not_found(error):

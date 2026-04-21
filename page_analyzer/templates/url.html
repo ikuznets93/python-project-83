@@ -3,22 +3,54 @@
 <main class="flex-grow-1">
     <div class="container-lg mt-3">
         <h1>Сайт {{ url_info.name }}</h1>
-            <table class="table table-bordered table-striped" data-test="urls">
-                <tbody>
-                    <tr>
-                        <td> ID </td>
-                        <td>{{ url_info.id }}</td>
-                    </tr>
-                    <tr>
-                        <td> Имя </td>
-                        <td>{{ url_info.name }}</td>
-                    </tr>
-                    <tr>
-                        <td>Дата создания</td>
-                        <td>{{ url_info.created_at }}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <table class="table table-bordered table-striped" data-test="urls">
+            <tbody>
+                <tr>
+                    <td> ID </td>
+                    <td>{{ url_info.id }}</td>
+                </tr>
+                <tr>
+                    <td> Имя </td>
+                    <td>{{ url_info.name }}</td>
+                </tr>
+                <tr>
+                    <td>Дата создания</td>
+                    <td>{{ url_info.created_at }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container-lg mt-3">
+        <h2>Проверки</h2>
+        <form method="POST" action="/urls/{{ url_info.id }}/checks">
+            <button type="submit" class="btn btn-primary mx-1 my-1">Запустить проверку</button>
+        </form>
+        <table class="table table-bordered table-striped" data-test="urls">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Код ответа</th>
+                    <th>h1</th>
+                    <th>title</th>
+                    <th>description</th>
+                    <th>Дата создания</th>
+                </tr>
+            </thead>
+            {% for check in checks_data %}
+            <tbody>
+                <tr>
+                    <td> {{ check.id }} </td>
+                    <td> ... </td>
+                    <td> ... </td>
+                    <td> ... </td>
+                    <td> ... </td>
+                    <td> {{ check.created_at }} </td>
+
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
     </div>
 </main>
 {% endblock %}
