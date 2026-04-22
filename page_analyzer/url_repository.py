@@ -30,11 +30,11 @@ class UrlRepository:
             cur.execute("SELECT * FROM urls WHERE name = %s", (url,))
             return cur.fetchone()
     
-    def add_url_check(self, url_id):
+    def add_url_check(self, url_id, status_code):
         with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute(
-                "INSERT INTO url_checks (url_id) VALUES (%s)",
-                (url_id,)
+                "INSERT INTO url_checks (url_id, status_code) VALUES (%s, %s)",
+                (url_id, status_code,)
             )
         self.conn.commit()
     

@@ -1,5 +1,6 @@
 import os
 import psycopg2
+import requests
 
 from dotenv import load_dotenv
 from flask import (
@@ -68,7 +69,17 @@ def get_urls():
 @app.route("/urls/<int:id>/checks", methods=["POST"])
 def add_url_check(id):
     url_info = repo.find_id(id)
-    repo.add_url_check(id)
+    
+    try:
+        response = requests.get(url_info.get("name"), timeout=0.5)
+        response.raise_for_status()
+    except requests.RequestException:
+        flash("Произошла ошибка при проверке", "danger")
+        return render_template(url_for("get_url", id=id))
+    
+    status_code = response.status_code
+    
+    repo.add_url_check(id, status_code)
     flash("Страница успешно проверена", "success")
     checks_data = repo.get_url_checks(id)
     return render_template("url.html", url_info=url_info, checks_data=checks_data)
