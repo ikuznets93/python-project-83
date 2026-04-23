@@ -45,7 +45,7 @@ def urls_index():
     normalized_url = normalize_url(url["url"])
     url_info = repo.find_url(normalized_url)
     if url_info is not None:
-        flash("Указанный URL уже существует", "warning")
+        flash("Страница уже существует", "warning")
         return redirect(url_for("get_url", id=url_info["id"]))
     
     id = repo.add_url(normalized_url)
