@@ -90,12 +90,7 @@ def add_url_check(id):
     page_data["status_code"] = status_code
     repo.add_url_check(url_info, page_data)
     flash("Страница успешно проверена", "success")
-    checks_data = repo.get_url_checks(id)
-    return render_template(
-        "url.html",
-        url_info=url_info,
-        checks_data=checks_data
-    )
+    return redirect(url_for("get_url", id=id))
     
 
 @app.errorhandler(404)
