@@ -30,18 +30,39 @@ class UrlRepository:
             cur.execute("SELECT * FROM urls WHERE name = %s", (url,))
             return cur.fetchone()
     
-    def add_url_check(self, url_id, status_code):
+    def add_url_check(self, url_info, page_data):
+        query = '''
+        INSERT INTO url_checks (url_id, status_code, h1, title, description)
+        VALUES (%s, %s, %s, %s, %s)
+        '''
         with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute(
-                "INSERT INTO url_checks (url_id, status_code) VALUES (%s, %s)",
-                (url_id, status_code,)
-            )
+            cur.execute(query, (
+                url_info.get("id"),
+                page_data.get("status_code"),
+                page_data.get("h1"),
+                page_data.get("title"),
+                page_data.get("description"),
+            ))
         self.conn.commit()
     
     def get_url_checks(self, url_id):
+        query = '''
+        SELECT * FROM url_checks WHERE url_id = %s ORDER BY id DESC
+        '''
+        
         with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("SELECT * FROM url_checks WHERE url_id = %s ORDER BY id DESC", (url_id,))
-            return cur.fetchall()
+            cur.execute(query, (url_id,))
+            url_checks = cur.fetchall()
+            
+            for row in url_checks:
+                if row["h1"] is None:
+                    row["h1"] = ""
+                if row["title"] is None:
+                    row["title"] = ""
+                if row["description"] is None:
+                    row["description"] = ""
+                    
+            return url_checks
     
     def get_urls_last_checks(self):
         query = '''

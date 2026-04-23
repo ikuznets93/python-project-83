@@ -13,6 +13,7 @@ def normalize_url(url: str) -> str:
     normalized_url = f"{parsed_url.scheme}://{hostname}"
     return normalized_url
 
+
 def validate_url(url):
     errors = {}
 

@@ -1,20 +1,21 @@
 import os
+
 import psycopg2
 import requests
-
 from dotenv import load_dotenv
 from flask import (
-    abort,
-    get_flashed_messages,
-    flash,
     Flask,
+    abort,
+    flash,
     redirect,
     render_template,
     request,
-    url_for
+    url_for,
 )
+
+from page_analyzer.html_parser import parser
 from page_analyzer.url_repository import UrlRepository
-from .url_validator import normalize_url, validate_url
+from page_analyzer.url_validator import normalize_url, validate_url
 
 load_dotenv()
 app = Flask(__name__)
@@ -51,6 +52,7 @@ def urls_index():
     flash("Страница успешно добавлена", "success")
     return redirect(url_for("get_url", id=id))
 
+
 @app.route("/urls/<int:id>")
 def get_url(id):
     url_info = repo.find_id(id)
@@ -59,12 +61,18 @@ def get_url(id):
         abort(404)
 
     checks_data = repo.get_url_checks(id)
-    return render_template("url.html", url_info=url_info, checks_data=checks_data)
+    return render_template(
+        "url.html", 
+        url_info=url_info, 
+        checks_data=checks_data
+    )
+
 
 @app.route("/urls", methods=["GET"])
 def get_urls():
     urls_content = repo.get_urls_last_checks()
     return render_template("urls.html", urls_content=urls_content)
+
 
 @app.route("/urls/<int:id>/checks", methods=["POST"])
 def add_url_check(id):
@@ -75,14 +83,19 @@ def add_url_check(id):
         response.raise_for_status()
     except requests.RequestException:
         flash("Произошла ошибка при проверке", "danger")
-        return render_template(url_for("get_url", id=id))
+        return redirect(url_for("get_url", id=id))
     
     status_code = response.status_code
-    
-    repo.add_url_check(id, status_code)
+    page_data = parser(response)
+    page_data["status_code"] = status_code
+    repo.add_url_check(url_info, page_data)
     flash("Страница успешно проверена", "success")
     checks_data = repo.get_url_checks(id)
-    return render_template("url.html", url_info=url_info, checks_data=checks_data)
+    return render_template(
+        "url.html",
+        url_info=url_info,
+        checks_data=checks_data
+    )
     
 
 @app.errorhandler(404)

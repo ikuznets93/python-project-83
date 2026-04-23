@@ -42,9 +42,9 @@
                 <tr>
                     <td> {{ check.id }} </td>
                     <td> {{ check.status_code }} </td>
-                    <td> ... </td>
-                    <td> ... </td>
-                    <td> ... </td>
+                    <td> {{ check.h1|truncate(200, end='...') }} </td>
+                    <td> {{ check.title|truncate(200, end='...') }} </td>
+                    <td> {{ check.description|truncate(200, end='...') }} </td>
                     <td> {{ check.created_at }} </td>
 
                 </tr>
