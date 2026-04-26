@@ -2,7 +2,7 @@ install:
 	uv sync
 
 build:
-	uv build
+	./build.sh
 
 package-install:
 	uv tool install dist/*.whl
@@ -17,8 +17,5 @@ PORT ?= 8000
 start:
 	uv run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
-build-uv:
-	./build.sh
-
-render-start:
-	gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
+#render-start:
+#	gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
