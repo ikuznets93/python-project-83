@@ -1,0 +1,6 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "deploy": {
+    "preDeployCommand": "psql -a -d \"$DATABASE_URL\" -f database.sql"
+  }
+}
