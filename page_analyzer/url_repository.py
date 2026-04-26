@@ -74,7 +74,7 @@ class UrlRepository:
         FROM urls
         LEFT JOIN url_checks ON 
             urls.id = url_checks.url_id
-        ORDER BY id, created_at DESC;
+        ORDER BY urls.id, url_checks.id DESC;
         '''
         with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute(query)
