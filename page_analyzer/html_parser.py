@@ -13,8 +13,8 @@ def parser(response):
     else:
         meta_description = None
     
-    result["h1"] = h1
-    result["title"] = title
-    result["description"] = meta_description
+    result["h1"] = h1[:255]
+    result["title"] = title[:255]
+    result["description"] = meta_description[:255]
     
     return result
