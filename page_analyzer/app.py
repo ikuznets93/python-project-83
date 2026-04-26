@@ -77,6 +77,8 @@ def get_urls():
 @app.route("/urls/<int:id>/checks", methods=["POST"])
 def add_url_check(id):
     url_info = repo.find_id(id)
+    if not url_info:
+        abort(404)
     
     try:
         response = requests.get(url_info.get("name"), timeout=0.5)
@@ -96,5 +98,4 @@ def add_url_check(id):
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("errors/404.html"), 404
-
 
